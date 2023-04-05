@@ -6,15 +6,8 @@ from sqlalchemy import URL
 
 Base = declarative_base()
 def get_session():
-    # # docker_name = "sqlalchemy-database-1"
-    # username = "prof1"
-    # password = "prof1!"
-    # databasename = "exampledb"
-    # port = 3306
     # full_url = f"mariadb+pymysql://{username}:{password}@{}:{}/exampledb?charset=utf8mb4"
     # # full_url = f"mysql+mysqlconnector://{user}:{pw}@{docker_name}:{port}/{databasename}?charset=utf8mb4"
-    # engine = create_engine(full_url)
-
     url_object = URL.create(
         "mariadb+pymysql",
         # "mysql+mysqlconnector",
@@ -22,12 +15,11 @@ def get_session():
         username = "prof1",password = "prof1!",
         host = "capstonedb",
         database = "db",
+        port = 3306,
     )
     engine = create_engine(url_object,echo=False)
-
     Base.metadata.create_all(bind=engine)
     return sessionmaker(bind=engine)
-
 
 # print(get_session())
 # def print_all():

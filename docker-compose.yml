@@ -1,36 +1,60 @@
-version: "3.8"
+version: "3.9"
 services:
   database:
     image: mariadb:latest
     container_name: capstonedb
-    restart: unless-stopped # always
+    restart: unless-stopped
     env_file:
       - ./database/maria-env
     environment:
       TZ: Asia/Seoul
-      MARIADB_ROOT_PASSWORD: password
     # volumes: # host:container
     #   - ./database/maria-init.sql:/docker-entrypoint-initdb.d/maria-init.sql
     # ports:
-    #   - "3306:3306"
+    #   - 3306:3306
+    networks:
+      - mynetwork
   
   users:
     build: ./users
-    # image: python:3.10
-    restart: always
-    environment:
-      DB_URL: database
-      DB_NAME: exampledb
-      # DB_PORT: 3306
-      DB_USERNAME: root
-      DB_PASSWORD: password
+    restart: on-failure ##
     ports:
-      - 5556:5556
+      - 5556:8000
     depends_on:
       - database
+    networks:
+      - mynetwork
+
+  rooms:
+    build: ./rooms
+    restart: on-failure ##
+    ports:
+      - 5557:8000
+    depends_on:
+      - database
+    networks:
+      - mynetwork
+
+  reservations:
+    build: ./reservations
+    restart: on-failure ##
+    ports:
+      - 5558:8000
+    depends_on:
+      - database
+    networks:
+      - mynetwork
 
   adminer: # gui for database
     image: adminer
     restart: always
     ports:
-      - 8080:8080
+      - 9999:8080
+    depends_on:
+      - database
+    networks:
+      - mynetwork
+
+networks:
+  mynetwork:
+    driver: bridge
