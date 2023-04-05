@@ -1,9 +1,8 @@
 #https://www.youtube.com/watch?v=AKQ3XEDI9Mw
-from sqlalchemy import create_engine, ForeignKey, Column, String, Integer, CHAR
 from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy import URL
-import os
 
 Base = declarative_base()
 def get_session():
@@ -19,10 +18,8 @@ def get_session():
     url_object = URL.create(
         "mariadb+pymysql",
         # "mysql+mysqlconnector",
-        # username = "prof1",password = "prof1!",
-        username = "root",password = "password",
-        # host=os.getenv("DB_URL"),
-        # database=os.getenv("DB_NAME"),
+        # username = "root",password = "password",
+        username = "prof1",password = "prof1!",
         host = "capstonedb",
         database = "db",
     )
@@ -31,7 +28,8 @@ def get_session():
     Base.metadata.create_all(bind=engine)
     return sessionmaker(bind=engine)
 
-print(get_session())
+
+# print(get_session())
 # def print_all():
 #     session = get_session()
 #     print(session.query(Person).all())
