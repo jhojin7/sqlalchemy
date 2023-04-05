@@ -1,16 +1,18 @@
-version: "3"
+version: "3.8"
 services:
   database:
-    image: mariadb:11.0-rc-jammy
-    restart: always
+    image: mariadb:latest
+    container_name: capstonedb
+    restart: unless-stopped # always
     env_file:
       - ./database/maria-env
     environment:
       TZ: Asia/Seoul
-    volumes: # host:container
-      - ./database/maria-init.sql:/docker-entrypoint-initdb.d/maria-init.sql
-    ports:
-      - "3306:3306"
+      MARIADB_ROOT_PASSWORD: password
+    # volumes: # host:container
+    #   - ./database/maria-init.sql:/docker-entrypoint-initdb.d/maria-init.sql
+    # ports:
+    #   - "3306:3306"
   
   users:
     build: ./users
@@ -19,11 +21,16 @@ services:
     environment:
       DB_URL: database
       DB_NAME: exampledb
-      DB_PORT: 3306
-      DB_USERNAME: testusr
-      DB_PASSWORD: 1234
+      # DB_PORT: 3306
+      DB_USERNAME: root
+      DB_PASSWORD: password
     ports:
-      - "5556:5556"
+      - 5556:5556
     depends_on:
       - database
 
+  adminer: # gui for database
+    image: adminer
+    restart: always
+    ports:
+      - 8080:8080
