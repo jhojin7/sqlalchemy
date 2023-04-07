@@ -1,5 +1,5 @@
 - 실행  
-`python3 main.py`
+`python3 automapping.py`
 
 - 출력
 ```
